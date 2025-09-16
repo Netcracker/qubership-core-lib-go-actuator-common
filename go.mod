@@ -3,7 +3,7 @@ module github.com/netcracker/qubership-core-lib-go-actuator-common/v2
 go 1.24.2
 
 require (
-	github.com/netcracker/qubership-core-lib-go/v3 v3.0.1
+	github.com/netcracker/qubership-core-lib-go/v3 v3.1.0
 	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/client_model v0.6.2
 	github.com/stretchr/testify v1.10.0
@@ -22,7 +22,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/knadh/koanf/maps v0.1.1 // indirect
+	github.com/knadh/koanf/maps v0.1.2 // indirect
 	github.com/knadh/koanf/parsers/yaml v0.1.0 // indirect
 	github.com/knadh/koanf/providers/env v1.0.0 // indirect
 	github.com/knadh/koanf/providers/file v1.1.2 // indirect
