@@ -221,3 +221,4 @@ import (
 logLevelService, _ = loglevel.NewLogLevelService()
 data, err := logLevelService.GetLogLevels()
 ```
+
