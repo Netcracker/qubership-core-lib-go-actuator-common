@@ -6,8 +6,8 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
-  build-go-lib:
-    uses: netcracker/qubership-core-infra/.github/workflows/go-build-lib.yaml@feat/do-not-duplicate-build-runs
+  build:
+    uses: netcracker/qubership-core-infra/.github/workflows/go-build-with-sonar.yaml@v1.0.9
     with:
       actor: ${{ github.actor }}
       sonar-project-key: ${{ vars.SONAR_PROJECT_KEY }}
