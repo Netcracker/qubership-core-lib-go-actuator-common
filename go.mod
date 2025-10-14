@@ -1,6 +1,6 @@
 module github.com/netcracker/qubership-core-lib-go-actuator-common/v2
 
-go 1.25.1
+go 1.25.3
 
 require (
 	github.com/netcracker/qubership-core-lib-go/v3 v3.1.1
