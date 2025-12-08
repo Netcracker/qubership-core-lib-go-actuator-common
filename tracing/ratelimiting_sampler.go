@@ -2,10 +2,12 @@ package tracing
 
 import (
 	"fmt"
+	"math"
+	"strings"
+
 	"github.com/netcracker/qubership-core-lib-go-actuator-common/v2/tracing/utils"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
-	"math"
 )
 
 // RateLimitingSampler samples at most maxTracesPerSecond. The distribution of sampled traces follows
@@ -43,6 +45,13 @@ func (s *RateLimitingSampler) String() string {
 
 func (ts RateLimitingSampler) ShouldSample(p sdktrace.SamplingParameters) sdktrace.SamplingResult {
 	psc := trace.SpanContextFromContext(p.ParentContext)
+	if p.Name == "/health" || strings.HasPrefix(p.Name, "/static"){
+		return sdktrace.SamplingResult{
+			Decision:   sdktrace.Drop,
+			Tracestate: psc.TraceState(),
+		}
+	}
+
 	if ts.rateLimiter.CheckCredit(1.0) {
 		return sdktrace.SamplingResult{
 			Decision:   sdktrace.RecordAndSample,

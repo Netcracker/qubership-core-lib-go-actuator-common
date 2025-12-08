@@ -180,7 +180,7 @@ or explicitly pass ones. In order to init using env parameters you should pass t
 |---|---|---|---|
 |tracing.enabled  | Enable or disable tracing (to switch on/off without changing other params) | false | true/false|
 |tracing.host     | Zipkin host server, without port and protocol | -- | any string, for example nc-diagnostic-agent
-|tracing.sampler.const    | sampler always makes the same decision for all traces. It either samples all traces (value=1) or none of them (value=0). | 1 | 0 or 1 
+|tracing.sampler.const    | sampler always makes the same decision for all traces. It either samples all traces (value=1) or none of them (value=0). | 1 | 0 or 1. Only one exclusion - /health endpoint was added to drop list
 |microservice.name    | microservice name | -- | any string, for example tenant-manager
 
 ```go
