@@ -27,6 +27,7 @@ func TestShouldSample_RecordAndSample_Drop(t *testing.T) {
 			SpanID:  spanID,
 		}),
 	)
+
 	assert.Equal(t, sdktrace.RecordAndSample, sampler.ShouldSample(sdktrace.SamplingParameters{ParentContext: parentCtx}).Decision)
 	assert.Equal(t, sdktrace.Drop, sampler.ShouldSample(sdktrace.SamplingParameters{ParentContext: parentCtx}).Decision)
 }
