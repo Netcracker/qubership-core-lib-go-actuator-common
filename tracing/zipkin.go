@@ -86,7 +86,7 @@ func (this *zipkinTracer) RegisterTracerProvider() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	batcher := sdktrace.NewSimpleSpanProcessor(exporter)
+	batcher := sdktrace.NewBatchSpanProcessor(exporter)
 
 	/* Note: service.namespace and service.name are not intended to be concatenated automatically
 	for the purpose of forming a single globally unique name for the service.

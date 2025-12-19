@@ -2,10 +2,13 @@ package tracing
 
 import (
 	"fmt"
+	"math"
+	"strings"
+
 	"github.com/netcracker/qubership-core-lib-go-actuator-common/v2/tracing/utils"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.20.0"
 	"go.opentelemetry.io/otel/trace"
-	"math"
 )
 
 // RateLimitingSampler samples at most maxTracesPerSecond. The distribution of sampled traces follows
@@ -43,6 +46,13 @@ func (s *RateLimitingSampler) String() string {
 
 func (ts RateLimitingSampler) ShouldSample(p sdktrace.SamplingParameters) sdktrace.SamplingResult {
 	psc := trace.SpanContextFromContext(p.ParentContext)
+	targetUrl := getHTTPTarget(p)
+	if p.Name == "/health" || targetUrl == "/health" || strings.HasPrefix(targetUrl, "/static"){
+		return sdktrace.SamplingResult{
+			Decision:   sdktrace.Drop,
+			Tracestate: psc.TraceState(),
+		}
+	}
 	if ts.rateLimiter.CheckCredit(1.0) {
 		return sdktrace.SamplingResult{
 			Decision:   sdktrace.RecordAndSample,
@@ -57,4 +67,15 @@ func (ts RateLimitingSampler) ShouldSample(p sdktrace.SamplingParameters) sdktra
 
 func (ts RateLimitingSampler) Description() string {
 	return ts.description
+}
+
+func getHTTPTarget(p sdktrace.SamplingParameters) string {
+    for _, attr := range p.Attributes {
+        if attr.Key == semconv.HTTPTargetKey {
+            if val := attr.Value.AsString(); val != "" {
+                return val
+            }
+        }
+    }
+    return "/"
 }
