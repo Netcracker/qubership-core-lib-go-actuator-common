@@ -64,11 +64,11 @@ func (healthServiceImpl *healthServiceImpl) SetStatusResolver(resolver func(Chec
 func (healthServiceImpl *healthServiceImpl) Start() HealthService {
 	if healthServiceImpl.statusMapping == nil {
 		healthServiceImpl.statusMapping = getDefaultStatusMapping()
-		logger.Debug("No statusMapping provided, using default one: %s", healthServiceImpl.statusMapping)
+		logger.Debug("No statusMapping provided, using default one: %v", healthServiceImpl.statusMapping)
 	}
 	if healthServiceImpl.statusOrder == nil {
 		healthServiceImpl.statusOrder = getDefaultStatusOrder()
-		logger.Debug("No StatusOrder provided, using default one: %s", healthServiceImpl.statusOrder)
+		logger.Debug("No StatusOrder provided, using default one: %v", healthServiceImpl.statusOrder)
 	}
 
 	if healthServiceImpl.statusResolver == nil {
