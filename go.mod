@@ -2,6 +2,17 @@ module github.com/netcracker/qubership-core-lib-go-actuator-common/v2
 
 go 1.26.4
 
+retract (
+	v2.7.1  // Published by error.
+	v2.7.2  // Published by error.
+	v2.7.3  // Published by error.
+	v2.7.4  // Published by error.
+	v2.8.0  // Published by error.
+	v2.9.0  // Published by error.
+	v2.9.1  // Published by error.
+	v2.10.0 // Published by error.
+)
+
 require (
 	github.com/netcracker/qubership-core-lib-go/v3 v3.11.1
 	github.com/prometheus/client_golang v1.23.2
