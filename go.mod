@@ -1,6 +1,6 @@
 module github.com/netcracker/qubership-core-lib-go-actuator-common/v2
 
-go 1.27.0
+go 1.26.5
 
 retract (
 	v2.10.0 // Published by error.
