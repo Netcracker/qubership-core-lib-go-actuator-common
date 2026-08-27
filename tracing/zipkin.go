@@ -38,14 +38,6 @@ type ZipkinOptions struct {
 
 	// required parameter
 	Namespace string
-
-	// ExcludedPaths are exact HTTP paths dropped from sampling (query string stripped).
-	// nil means DefaultExcludedTracePaths; non-nil (including empty) replaces the defaults.
-	ExcludedPaths []string
-
-	// ExcludedPathPrefixes are HTTP path prefixes dropped from sampling.
-	// nil means DefaultExcludedTracePathPrefixes; non-nil (including empty) replaces the defaults.
-	ExcludedPathPrefixes []string
 }
 
 type zipkinTracer struct {
@@ -113,15 +105,10 @@ func (this *zipkinTracer) RegisterTracerProvider() (bool, error) {
 }
 
 func (this *zipkinTracer) getSampler() trace.Sampler {
-	if !this.zipkinOptions.TracingEnabled {
-		return sdktrace.NeverSample()
+	if this.zipkinOptions.TracingEnabled {
+		return NewRateLimitingSampler(float64(this.zipkinOptions.TracingSamplerRateLimiting))
 	}
-	paths, prefixes := ResolveExcludedTracePaths(this.zipkinOptions)
-	return NewPathFilteringSampler(
-		NewRateLimitingSampler(float64(this.zipkinOptions.TracingSamplerRateLimiting)),
-		paths,
-		prefixes,
-	)
+	return sdktrace.NeverSample()
 }
 
 func (*zipkinTracer) checkConfigs(options *ZipkinOptions) error {

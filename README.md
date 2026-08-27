@@ -183,28 +183,7 @@ or explicitly pass ones. In order to init using env parameters you should pass t
 |tracing.sampler.ratelimiting | max traces per second (rate limiting sampler) | 10 | positive integer |
 |microservice.name    | microservice name | -- | any string, for example tenant-manager
 
-By default the Zipkin tracer wraps the rate-limiting sampler with a path filter that drops common probe/actuator endpoints (`/health`, `/ready`, `/prometheus`, `/metrics`, `/api-version`, …) and the `/static` prefix. Override via `ZipkinOptions`:
-
-```go
-// use library defaults
-zipkinTracer := NewZipkinTracer()
-
-// replace defaults with a custom list
-options := ZipkinOptions{
-    ServiceName: "someService",
-    TracingHost: "localhost",
-    TracingSamplerRateLimiting: 10,
-    TracingEnabled: true,
-    Namespace: "test-namespace",
-    ExcludedPaths: []string{"/health", "/custom-probe"},
-    ExcludedPathPrefixes: []string{"/static"},
-}
-zipkinTracer := NewZipkinTracerWithOpts(options)
-
-// disable path filtering entirely (nil = defaults; empty slice = no exclusions)
-options.ExcludedPaths = []string{}
-options.ExcludedPathPrefixes = []string{}
-```
+Probe/actuator endpoint filtering belongs in HTTP middleware (e.g. `fiber-server-utils`), not in the Zipkin sampler. `RateLimitingSampler` only applies the rate limit.
 
 ```go
 import (
