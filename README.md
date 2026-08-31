@@ -183,7 +183,21 @@ or explicitly pass ones. In order to init using env parameters you should pass t
 |tracing.sampler.ratelimiting | max traces per second (rate limiting sampler) | 10 | positive integer |
 |microservice.name    | microservice name | -- | any string, for example tenant-manager
 
-Probe/actuator endpoint filtering belongs in HTTP middleware (e.g. `fiber-server-utils`), not in the Zipkin sampler. `RateLimitingSampler` only applies the rate limit.
+Probe/actuator endpoint filtering belongs in HTTP middleware (`qubership-core-lib-go-fiber-server-utils`), not in the Zipkin sampler.
+
+**What was removed from this library**
+
+`RateLimitingSampler` used to drop spans for `/health` and paths with the `/static` prefix before applying the rate limit. That logic was removed. The sampler now only decides how many traces per second may be recorded (`tracing.sampler.ratelimiting`, default 10).
+
+**Why**
+
+Span creation for Fiber services happens in `fiber-server-utils` middleware. Filtering paths in the sampler meant maintaining a duplicate path list, matching HTTP attributes (`http.target`) that depend on semconv version, and still running expensive attribute construction before `Drop`. The Fiber builder already knows which actuator routes it registers and can skip them earlier and more accurately.
+
+**How services should exclude paths now**
+
+Use `fiberserver.WithTracer(tracing.NewZipkinTracer(), fiberserver.SkipTracing("/health", "/ready"))`. The Fiber builder automatically skips its own actuator routes and the `/static` prefix. See the `WithTracer` section in the fiber-server-utils README.
+
+If you call `RegisterTracerProvider()` directly without the Fiber middleware (custom HTTP stack), no path filtering is applied — only rate limiting.
 
 ```go
 import (
